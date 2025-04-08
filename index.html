@@ -1,0 +1,76 @@
+<html><head><meta name="color-scheme" content="light dark"></head><body cz-shortcut-listen="true"><pre style="word-wrap: break-word; white-space: pre-wrap;">////#region Inputs
+const typeSpeed = 150;
+const deleteSpeed = typeSpeed / 2;
+const readTime = 2000;
+const sourceId = "typetext";
+const cursorId = "cursor";
+var _CONTENT = [
+  "Weweb",
+  "Bubble",
+  "Pegar Mulher",
+  "Xano",
+  "Implantar cabelo,
+  "Flutterflow",
+  "Dormir na rede enquanto coloca os alunos para darem aula",
+  "OpenAI",
+  "Não ensina supabase :(",
+];
+//#endregion
+//#region State Variables
+var _PART = 0;
+var _PART_INDEX = 0;
+var _INTERVAL_VAL;
+//#endregion
+
+if (typeof window.ranOnce == "undefined") {
+  window.ranOnce = true;
+  var _ELEMENT = document.getElementById(sourceId);
+  var _CURSOR = document.getElementById(cursorId);
+}
+
+// Implements typing effect
+function Type() {
+  // Get substring with 1 characater added
+  if (!_ELEMENT) return;
+  var text = _CONTENT[_PART].substring(0, _PART_INDEX + 1);
+  _ELEMENT.innerHTML = text;
+  _PART_INDEX++;
+
+  // If full sentence has been displayed then start to delete the sentence after some time
+  if (text === _CONTENT[_PART]) {
+    // Hide the cursor
+   if(_CURSOR) _CURSOR.style.display = "none";
+    clearInterval(_INTERVAL_VAL);
+    setTimeout(function () {
+      _INTERVAL_VAL = setInterval(Delete, deleteSpeed);
+    }, readTime);
+  }
+}
+
+// Implements deleting effect
+function Delete() {
+  if (!_ELEMENT) return;
+  // Get substring with 1 characater deleted
+  var text = _CONTENT[_PART].substring(0, _PART_INDEX - 1);
+  _ELEMENT.innerHTML = text;
+  _PART_INDEX--;
+
+  // If sentence has been deleted then start to display the next sentence
+  if (text === "") {
+    clearInterval(_INTERVAL_VAL);
+    // If current sentence was last then display the first one, else move to the next
+    if (_PART == _CONTENT.length - 1) _PART = 0;
+    else _PART++;
+
+    _PART_INDEX = 0;
+
+    // Start to display the next sentence after some time
+    setTimeout(function () {
+      if(_CURSOR) _CURSOR.style.display = "inline-block";
+      _INTERVAL_VAL = setInterval(Type, typeSpeed);
+    }, 200);
+  }
+}
+
+// Start the typing effect on load
+_INTERVAL_VAL = setInterval(Type, typeSpeed);</pre></body></html>
